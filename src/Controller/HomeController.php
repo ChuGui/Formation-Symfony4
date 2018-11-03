@@ -2,15 +2,20 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-Class HomeController {
+Class HomeController extends Controller
+{
 
     /**
      * @Route("/", name="homepage")
      */
-    public function home(){
-        return new Response("<h1>BOnjour à tous</h1>");
+    public function homepage()
+    {
+        $prenoms = ["lior" => 31, "guillaume" => 32, "hall" => 43];
+        return $this->render('home.html.twig', ['prenoms' => $prenoms, 'title' => 'Bonjour à tous', 'age' => 16]);
     }
+
 }
