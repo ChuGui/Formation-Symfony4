@@ -8,22 +8,21 @@
 
         <h1 class="my-3">Voici les annonces de nos hôtes !</h1>
         <div class="row">
-            {% for i in 0..20 %}
+            {% for annonce in annonces %}
+                {% set url = path('annonces_show' , {'slug' : annonce.slug}) %}
                 <div class="col-md-4">
                     <div class="card bg-light mb-3">
                         <div class="card-header text-center">
-                            3 chambres, <strong>69&euro; / nuit</strong><br>
+                            {{ annonce.rooms }} chambres, <strong>{{ annonce.price }}&euro; / nuit</strong><br>
                             <small>Pas encore noté</small>
                         </div>
 
-                        <img src="http://placehold.it/1000x400" alt="Image de l'appartement"
-                             style="height: 200px; width: 100%; display: block;">
+                        <a href="{{ url }}"><img src="{{ annonce.coverImage }}" alt="Image de l'appartement"
+                             style="height: 200px; width: 100%; display: block;"></a>
                         <div class="card-body">
-                            <h4 class="card-title">Appartement de ouf !</h4>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
-                                cumque ducimus exercitationem itaque minima porro, quae sint temporibus. Possimus,
-                                repudiandae.</p>
-                            <a href="#" class="btn btn-secondary">En savoir plus</a>
+                            <h4 class="card-title"><a href="{{ url }}">{{ annonce.title }}</a></h4>
+                            <p class="card-text">{{ annonce.introduction }}</p>
+                            <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
                         </div>
                     </div>
                 </div>
