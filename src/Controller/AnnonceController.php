@@ -48,6 +48,8 @@ class AnnonceController extends AbstractController
                 $manager->persist($image);
             }
 
+            $annonce->setAuthor($this->getUser());
+
             $manager->persist($annonce);
             $manager->flush();
 
