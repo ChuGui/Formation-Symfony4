@@ -6,6 +6,8 @@ use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +32,9 @@ class AnnonceController extends AbstractController
      * Permet de créer une annonce
      *
      * @Route("/annonces/new", name="annonces_create")
+     *
+     * @IsGranted("ROLE_USER")
+     *
      * @return Response
      */
     public function create(Request $request, ObjectManager $manager)
@@ -88,6 +93,13 @@ class AnnonceController extends AbstractController
      * Permet d'afficher un formulaire d'édition
      *
      * @Route("/annonces/{slug}/edit", name="annonces_edit")
+     * @Security("is_granted('ROLE_USER') and user === annonce.getAuthor()", message="Cette annonce ne vous appartient pas, vous ne pouvez pas la modifier")
+     *
+     *
+     * @param Annonce $annonce
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function edit(Annonce $annonce, Request $request, ObjectManager $manager)
     {
@@ -119,6 +131,28 @@ class AnnonceController extends AbstractController
             'form' => $form->createView(),
             'annonce' => $annonce
         ]);
+    }
+
+
+    /**
+     * Permet de supprimer une annonce
+     *
+     * @Route("/annonces/{slug}/delete" , name="annonces_delete")
+     * @Security("is_granted('ROLE_USER') and user == annonce.getAuthor()", message="Vous n'avez pas le droit d'acceder à cette ressource")
+     *
+     *
+     * @param Annonce $annonce
+     * @param ObjectManager $manager
+     *
+     * @return Response
+     */
+    public function delete(Annonce $annonce, ObjectManager $manager){
+        $manager->remove($annonce);
+        $manager->flush();
+
+        $this->addFlash("success", "L'annonce <strong>{$annonce->getTitle()}</strong> à bien été supprimée !");
+
+        return $this->redirectToRoute("annonces_index");
     }
 
 }

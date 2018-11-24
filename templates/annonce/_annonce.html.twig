@@ -12,6 +12,13 @@
 			<h4 class="card-title"><a href="{{ url }}">{{ annonce.title }}</a></h4>
 			<p class="card-text">{{ annonce.introduction }}</p>
 			<a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+			{% if app.user and app.user == annonce.author %}
+				<a href="{{ path('annonces_edit', {'slug' : annonce.slug}) }}" class="btn btn-secondary">Modifier
+					l'annonce</a>
+				<a href="{{ path('annonces_delete', {'slug' : annonce.slug} ) }}" class="btn btn-danger"
+				   onclick="return confirm(`Êtes-vous sûr de vouloir supprimer l'annonce : {{ annonce.title }} ?`)">Supprimer
+					l'annonce</a>
+			{% endif %}
 		</div>
 	</div>
 </div>

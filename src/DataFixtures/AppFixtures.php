@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Annonce;
 use App\Entity\Image;
+use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
     private $encoder;
+
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
@@ -21,6 +23,21 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr-FR');
+
+        $adminRole = new Role();
+        $adminRole->setTitle('ROLE_ADMIN');
+        $manager->persist($adminRole);
+
+        $adminUser = new User();
+        $adminUser->setFirstName('Guillaume')
+            ->setLastName('Churlet')
+            ->setEmail('unemail@gmail.com')
+            ->setHash($this->encoder->encodePassword($adminUser, 'password'))
+            ->setPicture('https://avatars.io/twitter/dieu')
+            ->setIntroduction($faker->sentence())
+            ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
+            ->addUserRole($adminRole);
+        $manager->persist($adminUser);
 
         $users = [];
         $genres = ['male', 'female'];
@@ -44,7 +61,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->sentence())
                 ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
                 ->setHash($hash)
-            ->setPicture($picture);
+                ->setPicture($picture);
 
             $manager->persist($user);
             $users[] = $user;
@@ -59,7 +76,7 @@ class AppFixtures extends Fixture
 
             $annonce = new Annonce();
 
-            $user = $users[mt_rand(0, count($users)-1)];
+            $user = $users[mt_rand(0, count($users) - 1)];
 
             $annonce->setTitle($title)
                 ->setCoverImage($coverImage)
@@ -67,7 +84,7 @@ class AppFixtures extends Fixture
                 ->setContent($content)
                 ->setPrice(mt_rand(40, 200))
                 ->setRooms(mt_rand(2, 6))
-            ->setAuthor($user);
+                ->setAuthor($user);
 
             for ($j = 1; $j <= mt_rand(2, 5); $j++) {
                 $image = new Image();
