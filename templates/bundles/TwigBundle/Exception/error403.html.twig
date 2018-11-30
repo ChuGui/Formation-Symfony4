@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Page introuvable{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Alors ? On essaye de casser le site ? </h1>
+		<div class="alert alert-danger">
+			
+			<p>Vous n'avez pas le droit d'acceder à cette ressource !</p>
+		</div>
+		<a href="{{ path('homepage') }}" class="btn btn-primary">Retourner à la page d'accueil</a>
+		<a href="{{ path('annonces_index') }}" class="btn btn-success">Retourner voir les annonces</a>
+	</div>
+
+
+{% endblock %}

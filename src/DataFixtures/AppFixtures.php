@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Annonce;
+use App\Entity\Booking;
 use App\Entity\Image;
 use App\Entity\Role;
 use App\Entity\User;
@@ -92,6 +93,28 @@ class AppFixtures extends Fixture
                     ->setUrl($faker->imageUrl())
                     ->setAnnonce($annonce);
                 $manager->persist($image);
+            }
+
+            //Gestion des bookings
+            for ($k = 1; $k <= mt_rand(0, 10); $k++) {
+                $booking = new Booking();
+
+                $startDate = $faker->dateTimeBetween("-3 months");
+
+                $numberOfDays = mt_rand(3, 10);
+
+                $comment = $faker->paragraph();
+
+                $booking->setBooker($faker->randomElement($users))
+                    ->setCreatedAt($faker->dateTimeBetween("-6 months"))
+                    ->setStartDate($startDate)
+                    ->setEndDate((clone $startDate)->modify("+ $numberOfDays days"))
+                    ->setAmount($numberOfDays * $annonce->getPrice())
+                    ->setComment($comment)
+                ;
+
+                $annonce->addBooking($booking);
+                $manager->persist($booking);
             }
 
             $manager->persist($annonce);
