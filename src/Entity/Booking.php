@@ -32,11 +32,15 @@ class Booking
     private $annonce;
 
     /**
+     * @Assert\Date(message="Attention, la date d'arrivée doit être au bon format")
+     * @Assert\GreaterThan("today", message="La date d'arrivée doit être ultérieure à la date d'aujourd'hui !")
      * @ORM\Column(type="datetime")
      */
     private $startDate;
 
     /**
+     * @Assert\GreaterThan(propertyPath="startDate", message="La date de départ doit être ultérieur à la date d'arrivée !")
+     * @Assert\Date(message="Attention, la date de départ doit être au bon format")
      * @ORM\Column(type="datetime")
      */
     private $endDate;
@@ -69,6 +73,49 @@ class Booking
             //Prix de l'annonce * nombre de jour
             $this->amount =  $this->annonce->getPrice() * $this->getDuration();
         }
+
+    }
+
+    public function isBookableDates(){
+        // 1) Il faut connaître les dates qui sont impossible pour l'annonce
+        $notAvailableDays = $this->annonce->getNotAvailableDays();
+        //2) Il faut comparer les dates choisies avec les dates impossibles
+        $bookingDays = $this->getDays();
+
+        $formatDay   = function($day){
+            return $day->format('Y-m-d');
+        };
+
+        // Tableau de chaînes de caractères de mes journées
+        $days            = array_map($formatDay, $bookingDays);
+        $notAvailable    = array_map($formatDay, $notAvailableDays);
+
+        foreach($days as $day){
+            if(array_search($day, $notAvailable) !== false) return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Cette fonction va permetttre de récupérer un tableau des journées qui correspondent à ma réservation
+     *
+     * @return array Un tableau d'objets DateTime représentant les jours de la réservation
+     */
+    public function getDays(){
+
+        $resultat = range(
+          $this->startDate->getTimestamp(),
+            $this->endDate->getTimestamp(),
+            24*60*60
+        );
+
+        $days = array_map(function($dayTimestamp){
+            return new \DateTime(date('Y-m-d', $dayTimestamp));
+        }, $resultat);
+
+        return $days;
 
     }
 
