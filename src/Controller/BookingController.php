@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookingController extends AbstractController
 {
     /**
-     * @Route("/annonces/{slug}/book", name="booking_create")
+     * @Route("/annonce/{slug}/book", name="booking_create")
      * @param Annonce $annonce
      * @IsGranted("ROLE_USER")
      * @return Response

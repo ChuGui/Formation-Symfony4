@@ -18,12 +18,13 @@
 			</thead>
 			
 			<tbody>
-			{% for annonce in annonces %}
+			{% for annonce in paginator.data %}
 				<tr>
 					<td>{{ annonce.id }}</td>
 					<td>{{ annonce.title }}</td>
 					<td>
-						<img src="{{ annonce.author.picture }}" alt="avatar de {{ annonce.author.fullName }}" class="avatar avatar-mini mr-2">
+						<img src="{{ annonce.author.picture }}" alt="avatar de {{ annonce.author.fullName }}"
+						     class="avatar avatar-mini mr-2">
 						{{ annonce.author.fullName }}
 					</td>
 					<td class="text-center">
@@ -33,12 +34,16 @@
 						<span class="badge badge-primary rounded">{{ annonce.avgRatings | number_format(1, ',', ' ') }}</span>
 					</td>
 					<td>
-						<a href="{{ path('admin_annonces_edit', {'id' : annonce.id }) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-						<a href="{{ path('admin_annonces_delete', {'id': annonce.id }) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+						<a href="{{ path('admin_annonce_edit', {'id' : annonce.id }) }}" class="btn btn-primary"><i
+									class="fas fa-edit"></i></a>
+						<a href="{{ path('admin_annonce_delete', {'id': annonce.id }) }}" class="btn btn-danger"><i
+									class="fas fa-trash"></i></a>
 					</td>
 				</tr>
 			{% endfor %}
 			</tbody>
 		</table>
+		
+		{{ paginator.display }}
 	</div>
 {% endblock %}

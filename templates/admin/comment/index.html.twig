@@ -19,12 +19,13 @@
 			</thead>
 			
 			<tbody>
-			{% for comment in comments %}
+			{% for comment in paginator.data %}
 				<tr>
 					<td>{{ comment.id }}</td>
 					<td>{{ comment.createdAt | date('d/m/Y H:i') }}</td>
 					<td>
-						<img src="{{ comment.author.picture }}" alt="avatar de {{ comment.author.fullName }}" class="avatar avatar-mini mr-2">
+						<img src="{{ comment.author.picture }}" alt="avatar de {{ comment.author.fullName }}"
+						     class="avatar avatar-mini mr-2">
 						{{ comment.author.fullName }}
 					</td>
 					<td class="text-center">
@@ -35,12 +36,16 @@
 					</td>
 					<td>{{ comment.annonce.title }}</td>
 					<td>
-						<a href="{{ path('admin_comments_edit', {'id' : comment.id }) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-						<a href="{{ path('admin_comments_delete', {'id': comment.id  }) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+						<a href="{{ path('admin_comment_edit', {'id' : comment.id }) }}" class="btn btn-primary"><i
+									class="fas fa-edit"></i></a>
+						<a href="{{ path('admin_comment_delete', {'id': comment.id  }) }}" class="btn btn-danger"><i
+									class="fas fa-trash"></i></a>
 					</td>
 				</tr>
 			{% endfor %}
 			</tbody>
 		</table>
+		
+		{{ paginator.display }}
 	</div>
 {% endblock %}

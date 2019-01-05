@@ -17,7 +17,7 @@
 					Votre réservation auprès de <strong> <a
 								href="{{ path('user_show', {'slug' : author.slug }) }}">{{ author.fullName }}</a></strong>
 					pour l'annonce <strong><a
-								href="{{ path('annonces_show', {'slug' : annonce.slug}) }}">{{ annonce.title }}</a></strong>,
+								href="{{ path('annonce_show', {'slug' : annonce.slug}) }}">{{ annonce.title }}</a></strong>,
 					à bien été prise en compte !
 				
 				</p>
@@ -88,7 +88,7 @@
 					<h2 class="alert-heading">Votre hébergement</h2>
 					
 					
-					<h4><a href="{{ path('annonces_show', { 'slug' : annonce.slug }) }}">{{ annonce.title }}</a></h4>
+					<h4><a href="{{ path('annonce_show', { 'slug' : annonce.slug }) }}">{{ annonce.title }}</a></h4>
 					
 					<img src="{{ annonce.coverImage }}" alt="Image de {{ annonce.title }}" class="img-fluid">
 					
@@ -96,7 +96,7 @@
 						{{ annonce.content | raw }}
 					</div>
 					
-					<a href="{{ path('annonces_show', { 'slug': annonce.slug }) }}" class="btn btn-primary">Plus
+					<a href="{{ path('annonce_show', { 'slug': annonce.slug }) }}" class="btn btn-primary">Plus
 						d'informations</a>
 				</div>
 			</div>

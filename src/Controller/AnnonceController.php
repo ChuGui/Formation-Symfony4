@@ -17,7 +17,7 @@ use App\Entity\Annonce;
 class AnnonceController extends AbstractController
 {
     /**
-     * @Route("/annonces", name="annonces_index")
+     * @Route("/annonce", name="annonce_index")
      */
     public function index(AnnonceRepository $repository)
     {
@@ -31,7 +31,7 @@ class AnnonceController extends AbstractController
     /**
      * Permet de créer une annonce
      *
-     * @Route("/annonces/new", name="annonces_create")
+     * @Route("/annonce/new", name="annonce_create")
      *
      * @IsGranted("ROLE_USER")
      *
@@ -77,7 +77,7 @@ class AnnonceController extends AbstractController
     /**
      * Permet d'afficher une seule annonce
      *
-     * @Route("/annonces/{slug}", name="annonces_show")
+     * @Route("/annonce/{slug}", name="annonce_show")
      * @return Response
      */
     public function show(Annonce $annonce)
@@ -92,7 +92,7 @@ class AnnonceController extends AbstractController
     /**
      * Permet d'afficher un formulaire d'édition
      *
-     * @Route("/annonces/{slug}/edit", name="annonces_edit")
+     * @Route("/annonce/{slug}/edit", name="annonce_edit")
      * @Security("is_granted('ROLE_USER') and user === annonce.getAuthor()", message="Cette annonce ne vous appartient pas, vous ne pouvez pas la modifier")
      *
      *
@@ -123,7 +123,7 @@ class AnnonceController extends AbstractController
             $this->addFlash(
                 'success',
                 "Félicitation ! L'annonce <strong>{$annonce->getSlug()}test</strong> à bien été modifiée !");
-            return $this->redirectToRoute('annonces_show', [
+            return $this->redirectToRoute('annonce_show', [
                 'slug' => $annonce->getSlug()
             ]);
         }
@@ -137,7 +137,7 @@ class AnnonceController extends AbstractController
     /**
      * Permet de supprimer une annonce
      *
-     * @Route("/annonces/{slug}/delete" , name="annonces_delete")
+     * @Route("/annonce/{slug}/delete" , name="annonce_delete")
      * @Security("is_granted('ROLE_USER') and user == annonce.getAuthor()", message="Vous n'avez pas le droit d'acceder à cette ressource")
      *
      *
@@ -152,7 +152,7 @@ class AnnonceController extends AbstractController
 
         $this->addFlash("success", "L'annonce <strong>{$annonce->getTitle()}</strong> à bien été supprimée !");
 
-        return $this->redirectToRoute("annonces_index");
+        return $this->redirectToRoute("annonce_index");
     }
 
 }

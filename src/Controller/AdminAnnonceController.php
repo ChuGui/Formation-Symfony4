@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Annonce;
 use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
+use App\Service\Paginator;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,22 +14,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminAnnonceController extends AbstractController
 {
     /**
-     * @Route("/admin/annonces", name="admin_annonces_index")
-     * @param AnnonceRepository $repo
+     * @Route("/admin/annonce/{page<\d+>?1}", name="admin_annonce_index", requirements={"page": "\d+"})
+     * @param int $page
+     * @param Paginator $paginator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(AnnonceRepository $repo)
+    public function index($page, Paginator $paginator)
     {
+        $paginator->setEntityClass(Annonce::class)
+            ->setCurrentPage($page);
 
         return $this->render('admin/annonce/index.html.twig', [
-            'annonces' => $repo->findAll()
+            'paginator' => $paginator
         ]);
     }
 
     /**
      * Permet d'afficher le formulaire d'édition
      *
-     * @Route("/admin/annonces/{id}/edit", name="admin_annonces_edit")
+     * @Route("/admin/annonce/{id}/edit", name="admin_annonce_edit")
      *
      * @param Annonce $annonce
      * @return \Symfony\Component\HttpFoundation\Response
@@ -54,7 +58,7 @@ class AdminAnnonceController extends AbstractController
 
 
     /**
-     * @Route("/admin/annonces/{id}/delete", name="admin_annonces_delete")
+     * @Route("/admin/annonce/{id}/delete", name="admin_annonce_delete")
      * @param Annonce $annonce
      * @param ObjectManager $manager
      *
@@ -72,6 +76,6 @@ class AdminAnnonceController extends AbstractController
 
             $this->addFlash('success', "L'annonce <strong>{$annonce->getTitle()}</strong> à bien été supprimée !");
         }
-        return $this->redirectToRoute('admin_annonces_index');
+        return $this->redirectToRoute('admin_annonce_index');
     }
 }
