@@ -41,16 +41,36 @@ class AdminBookingController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $booking->setAmount(0);
             $manager->persist($booking);
             $manager->flush();
 
             $this->addFlash('success', "La réservation n°{$booking->getId()} à bien été modifiée! ");
-            $this->redirectToRoute('admin_bookings_index');
+            return $this->redirectToRoute('admin_bookings_index');
         }
 
         return $this->render('admin/booking/edit.html.twig', [
             'form' => $form->createView(),
             'booking' => $booking
         ]);
+    }
+
+
+    /**
+     * Permet de supprimer une réservation
+     *
+     * @Route("/admin/booking/{id}/delete", name="admin_booking_delete")
+     *
+     * @param Booking $booking
+     * @param ObjectManager $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function delete(Booking $booking, ObjectManager $manager){
+        $manager->remove($booking);
+        $manager->flush();
+
+        $this->addFlash("success", "La réservation n°{$booking->getId()} à bien été supprimée");
+
+        return $this->redirectToRoute("admin_bookings_index");
     }
 }
