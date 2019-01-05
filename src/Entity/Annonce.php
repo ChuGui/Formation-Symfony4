@@ -81,10 +81,16 @@ class Annonce
      */
     private $bookings;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="annonce", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -95,11 +101,44 @@ class Annonce
      *
      * @return  void
      */
-    public function initializeSlug() {
-        if(empty($this->slug)) {
+    public function initializeSlug()
+    {
+        if (empty($this->slug)) {
             $slugify = new Slugify();
             $this->slug = $slugify->slugify($this->title);
         }
+    }
+
+    /**
+     * Permet de récupérer le commentaire d'un autheur par rapport à une annonce
+     * @param User $author
+     * @return Comment|null
+     */
+    public function getCommentFromAuthor(User $author)
+    {
+        foreach ($this->comments as $comment) {
+            if($comment->getAuthor() === $author ) return $comment;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Permet d'obtenir la moyenne globale des notes pour cette annonce
+     * @return float|int
+     */
+    public function getAvgRatings()
+    {
+        //Calculer la somme des notations
+        $sum = array_reduce($this->comments->toArray(), function ($total, $comment) {
+            return $total + $comment->getRating();
+        });
+
+        //Faire la division pour avoir la moyenne
+        if (count($this->comments) > 0) return $sum / count($this->comments);
+
+        return 0;
     }
 
     /**
@@ -107,22 +146,23 @@ class Annonce
      *
      * @return array Un tableau d'objets DateTime représentant les jours d'occupation
      */
-    public function getNotAvailableDays(){
+    public function getNotAvailableDays()
+    {
         $notAvailableDays = [];
 
-        foreach ($this->bookings as $booking){
+        foreach ($this->bookings as $booking) {
             //Calculer les jours qui se trouvent entre la date d'arrivée et de départ
             $resultat = range(
                 $booking->getStartDate()->getTimestamp(),
                 $booking->getEndDate()->getTimestamp(),
-                24*60*60
-                );
+                24 * 60 * 60
+            );
 
-            $days  = array_map(function($dayTimeStamp){
+            $days = array_map(function ($dayTimeStamp) {
                 return new \DateTime(date('Y-m-d', $dayTimeStamp));
-            },$resultat);
+            }, $resultat);
 
-            $notAvailableDays = array_merge($notAvailableDays , $days);
+            $notAvailableDays = array_merge($notAvailableDays, $days);
         }
         return $notAvailableDays;
     }
@@ -284,6 +324,37 @@ class Annonce
             // set the owning side to null (unless already changed)
             if ($booking->getAnnonce() === $this) {
                 $booking->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAnnonce() === $this) {
+                $comment->setAnnonce(null);
             }
         }
 

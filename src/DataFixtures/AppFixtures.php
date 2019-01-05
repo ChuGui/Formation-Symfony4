@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Annonce;
 use App\Entity\Booking;
+use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Role;
 use App\Entity\User;
@@ -79,6 +80,7 @@ class AppFixtures extends Fixture
 
             $user = $users[mt_rand(0, count($users) - 1)];
 
+
             $annonce->setTitle($title)
                 ->setCoverImage($coverImage)
                 ->setIntroduction($introduction)
@@ -115,6 +117,16 @@ class AppFixtures extends Fixture
 
                 $annonce->addBooking($booking);
                 $manager->persist($booking);
+
+                //Gestion des commentaire
+                if(mt_rand(0, 1)){
+                    $comment = new Comment();
+                    $comment->setContent($faker->paragraph())
+                        ->setRating(mt_rand(1, 5))
+                        ->setAuthor($faker->randomElement($users))
+                        ->setAnnonce($annonce);
+                    $manager->persist($comment);
+                }
             }
 
             $manager->persist($annonce);
