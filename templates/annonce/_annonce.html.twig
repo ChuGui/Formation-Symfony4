@@ -1,4 +1,4 @@
-{% set url = path('annonces_show' , {'slug' : annonce.slug}) %}
+{% set url = path('annonce_show' , {'slug' : annonce.slug}) %}
 <div class="col-md-4">
 	<div class="card bg-light mb-3">
 		<div class="card-header text-center">
@@ -17,9 +17,9 @@
 			<p class="card-text">{{ annonce.introduction }}</p>
 			<a href="{{ url }}" class="btn btn-primary float-right">En savoir plus</a>
 			{% if app.user and app.user == annonce.author %}
-				<a href="{{ path('annonces_edit', {'slug' : annonce.slug}) }}" class="btn btn-secondary">Modifier
+				<a href="{{ path('annonce_edit', {'slug' : annonce.slug}) }}" class="btn btn-secondary">Modifier
 					l'annonce</a>
-				<a href="{{ path('annonces_delete', {'slug' : annonce.slug} ) }}" class="btn btn-danger"
+				<a href="{{ path('annonce_delete', {'slug' : annonce.slug} ) }}" class="btn btn-danger"
 				   onclick="return confirm(`Êtes-vous sûr de vouloir supprimer l'annonce : {{ annonce.title }} ?`)">Supprimer
 					l'annonce</a>
 			{% endif %}

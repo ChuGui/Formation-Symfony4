@@ -63,7 +63,7 @@ class AnnonceController extends AbstractController
                 'success',
                 "Félicitation ! L'annonce <strong>{$annonce->getSlug()}test</strong> à bien été enregistrée !");
 
-            return $this->redirectToRoute('annonces_show', [
+            return $this->redirectToRoute('annonce_show', [
                 'slug' => $annonce->getSlug()
             ]);
         }
