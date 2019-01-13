@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
+ * @ORM\Table(name="symbnb_role")
  */
 class Role
 {
@@ -25,6 +27,7 @@ class Role
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="userRoles")
+     * @JoinTable(name="symbnb_user_role")
      */
     private $users;
 

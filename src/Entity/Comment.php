@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\Table(name="symbnb_comment")
  * @ORM\HasLifecycleCallbacks()
  */
 class Comment

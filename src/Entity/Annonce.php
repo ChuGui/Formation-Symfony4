@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AnnonceRepository")
+ * @ORM\Table(name="symbnb_annonce")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"title"}, message="Une autre annonce possède déjà ce titre, merci de le modifier"
